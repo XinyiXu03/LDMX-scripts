@@ -1,6 +1,6 @@
 import math
 import numpy as np
-
+import copy
 
 # Constant defining the clearance between volumes
 clearance = 0.001
@@ -148,7 +148,8 @@ ecal_envelope_y = side_Ecal_dy
 ecal_envelope_z = ECal_dz + 1
 
 # Surround the ECal with scoring planes
-sp_ecal_front_z = ecal_front_z + (ecal_envelope_z - ECal_dz)/2 - sp_thickness/2 + clearance
+# sp_ecal_front_z = ecal_front_z + (ecal_envelope_z - ECal_dz)/2 - sp_thickness/2 + clearance
+sp_ecal_front_z = ecal_front_z - sp_thickness/2 - clearance      # v14
 sp_ecal_back_z = ecal_front_z + ECal_dz + (ecal_envelope_z - ECal_dz)/2 + sp_thickness/2
 sp_ecal_top_y = ECal_dy/2 + sp_thickness/2
 sp_ecal_bot_y = -ECal_dy/2 - sp_thickness/2
@@ -169,13 +170,23 @@ ecal_MODULE_SHIFT = 12
 ecal_CELL_MASK = 0xFFF  # Space for 4096 cells/module
 ecal_CELL_SHIFT = 0
 
-ecal_layerZs = ecal_front_z  + (ecal_envelope_z - ECal_dz)/2 + np.array([7.850,   13.300,  26.400,  33.500,  47.950,
-                                                                         56.550,  72.250,  81.350,  97.050,  106.150,
-                                                                         121.850, 130.950, 146.650, 155.750, 171.450,
-                                                                         180.550, 196.250, 205.350, 221.050, 230.150,
-                                                                         245.850, 254.950, 270.650, 279.750, 298.950,
-                                                                         311.550, 330.750, 343.350, 362.550, 375.150,
-                                                                         394.350, 406.950, 426.150, 438.750])
+# ecal_layerZs = ecal_front_z  + (ecal_envelope_z - ECal_dz)/2 + np.array([7.850,   13.300,  26.400,  33.500,  47.950,
+#                                                                          56.550,  72.250,  81.350,  97.050,  106.150,
+#                                                                          121.850, 130.950, 146.650, 155.750, 171.450,
+#                                                                          180.550, 196.250, 205.350, 221.050, 230.150,
+#                                                                          245.850, 254.950, 270.650, 279.750, 298.950,
+#                                                                          311.550, 330.750, 343.350, 362.550, 375.150,
+#                                                                          394.350, 406.950, 426.150, 438.750])
+
+## v14 ecal layer zpos
+Si_zpos = [7.932,   14.532,  32.146,  40.746,  58.110, 
+           67.710,  86.574,  96.774,  115.638, 125.838,
+           144.702, 154.902, 173.766, 183.966, 202.830,
+           213.030, 231.894, 242.094, 260.958, 271.158,
+           290.022, 300.222, 319.086, 329.286, 351.650,
+           365.250, 387.614, 401.214, 423.578, 437.178,
+           459.542, 473.142, 495.506, 509.106]
+ecal_layerZs = ecal_front_z + np.array(Si_zpos)
 
 # HCal GDML
 # Width and height of the envelope for the side and back HCal
@@ -250,7 +261,8 @@ layerWeights = [1.675,  2.724,  4.398,  6.039,  7.696,
                 9.630,  9.630,  9.630,  13.497, 17.364,
                 17.364, 17.364, 17.364, 17.364, 17.364,
                 17.364, 17.364, 17.364, 8.990]
-
+'''
+#4 GeV
 # Arrays holding 68% containment radius/layer for different bins in momentum/angle
 radius68_thetalt10_plt500 = [4.045666158618167,  4.086393662224346,  4.359141107602775,  4.666549994726691,  5.8569181911416015,
                              6.559716356124256,  8.686967529043072,  10.063482736354674, 13.053528344041274, 14.883496407943747,
@@ -280,6 +292,214 @@ radius68_thetagt20 = [4.0754238481177705, 4.193693485630508,  5.14209420056253, 
                       89.4528387422834,   93.18228303096758,  92.51751129204555,  98.80228884380018,  111.17537347472128,
                       120.89712563907408, 133.27021026999518, 142.99196243434795, 155.36504706526904, 165.08679922962185,
                       177.45988386054293, 187.18163602489574, 199.55472065581682, 209.2764728201696]
+
+#v12 RoC in 5 binings
+#radius68_thetalt10 = [7.48892284, 6.96265248, 7.34019205, 7.57229456, 8.3448285, 
+#                      8.68684457, 11.66640512, 12.81372939, 16.99343313, 18.41940349, 
+#                      22.75587241, 24.06064233, 28.56069497, 29.80462051, 34.48800502, 
+#                      36.29096547, 40.63857754, 42.27576872, 47.44136655, 48.26865106, 
+#                      54.18276106, 57.77947284, 63.9366392, 66.23713763 ,73.54545199, 
+#                      85.92620124, 89.32111925, 117.46657904, 134.76140252, 127.65772299, 
+#                      136.62116258, 145.90827489, 155.51905992, 165.45351767]
+#radius68_theta10to15 = [6.7784868, 6.69023831, 7.87126466, 9.01431935, 10.70435576, 
+#                        12.3507536, 16.03756409, 17.85887733, 22.50809821, 24.06504791, 
+#                        28.83330333, 30.85650917, 35.40650453, 37.61508846, 42.66525082, 
+#                        42.71716023, 48.1160002, 50.05665593, 59.39378126, 61.09989105, 
+#                        63.6087631, 73.95792097, 80.72646412, 84.31260595, 99.85004979, 
+#                       113.78930264, 142.87235416, 131.84525015, 191.08904247, 153.86448885, 
+#                        164.56721127, 175.64934223, 187.11088173, 198.95182977]
+#radius68_theta15to20 = [7.0364556, 6.9476672, 8.80007535, 10.27552185, 13.09115469, 
+#                        14.43498096, 18.94670611, 20.775059, 25.04060852, 26.84763092, 
+#                        31.34488452, 33.40945071, 37.59879346, 40.43543096, 44.4967363, 
+#                        46.32822497, 50.96187522, 55.63159434, 62.21964321, 62.33624293, 
+#                        67.83952626, 77.51155285, 89.24318516, 98.27966123, 97.68185056, 
+#                        149.74267784, 130.87649056, 121.33527473, 230.40837391, 172.8340071, 
+#                        184.73106084, 197.04670912, 209.78095194, 222.9337893]
+#radius68_theta20to30 = [7.06465681, 7.28772827, 9.79238566, 11.43651311, 15.29314257, 
+#                        17.56590145, 22.71455704, 24.05828534, 28.25484721, 31.12338628, 
+#                        35.54013176, 38.09786619, 44.88899103, 46.87593215, 55.71022917, 
+#                        57.64836512, 69.29480351, 67.13491515, 89.52119828, 90.68504829, 
+#                        106.24350984, 105.88210645, 137.2100168, 163.63825438, 201.36157781, 
+#                        255.40619303, 232.76628643, 260.57273514, 244.37284384, 249.6936127, 
+#                        267.2346798, 285.39378816, 304.17093778, 323.56612866]
+#radius68_theta30to60 = [8.50926762, 9.2423672, 15.2140014, 20.3882047, 31.02283305, 
+#                       37.22241797, 48.97621898, 55.7490225, 68.39323544, 81.96668452, 
+#                       97.73400922, 115.46240008, 128.99959103, 149.5119388, 176.32741268, 
+#                       190.724918, 221.39944056, 251.64445167, 268.74536078, 267.48400529, 
+#                       298.69962915, 348.77829127, 345.21260414, 357.08601722, 361.86481759, 
+#                       414.30728836, 471.94542305, 391.44031541, 490.09439743, 483.67203253, 
+#                       509.79601017, 536.55293967, 563.94282103, 591.96565425]
+
+
+
+##0.5*v12 RoC
+#radius68_thetalt10_05=[]
+#radius68_theta10to15_05=[]
+#radius68_theta15to20_05=[]
+#radius68_theta20to30_05=[]
+#radius68_theta30to60_05=[]
+#for i in range(0, len(radius68_thetalt10)):
+#    radius68_thetalt10_05.append(radius68_thetalt10[i]/2)
+#    radius68_theta10to15_05.append(radius68_theta10to15[i]/2)
+#    radius68_theta15to20_05.append(radius68_theta15to20[i]/2)
+#    radius68_theta20to30_05.append(radius68_theta20to30[i]/2)
+#    radius68_theta30to60_05.append(radius68_theta30to60[i]/2)
+
+##0.4*v12 RoC
+#radius68_thetalt10_04=[]
+#radius68_theta10to15_04=[]
+#radius68_theta15to20_04=[]
+#radius68_theta20to30_04=[]
+#radius68_theta30to60_04=[]
+#for i in range(0, len(radius68_thetalt10)):
+#    radius68_thetalt10_04.append(radius68_thetalt10[i]*0.4)
+#    radius68_theta10to15_04.append(radius68_theta10to15[i]*0.4)
+#    radius68_theta15to20_04.append(radius68_theta15to20[i]*0.4)
+#    radius68_theta20to30_04.append(radius68_theta20to30[i]*0.4)
+#    radius68_theta30to60_04.append(radius68_theta30to60[i]*0.4)
+
+##0.6*v12 RoC
+#radius68_thetalt10_06=[]
+#radius68_theta10to15_06=[]
+#radius68_theta15to20_06=[]
+#radius68_theta20to30_06=[]
+#radius68_theta30to60_06=[]
+#for i in range(0, len(radius68_thetalt10)):
+#    radius68_thetalt10_06.append(radius68_thetalt10[i]*0.6)
+#    radius68_theta10to15_06.append(radius68_theta10to15[i]*0.6)
+#    radius68_theta15to20_06.append(radius68_theta15to20[i]*0.6)
+#    radius68_theta20to30_06.append(radius68_theta20to30[i]*0.6)
+#    radius68_theta30to60_06.append(radius68_theta30to60[i]*0.6)
+
+
+
+
+## v14 RoC in 5 binnings (layer 26-34 from fitting)
+radius68_thetalt10 = [  10.12233413, 9.921772, 11.38255086, 11.67991867, 13.14337347, 
+                                13.17120624, 16.80994665, 17.83787244, 22.44684374, 23.74239886, 
+                                28.60564083, 30.27889678, 34.86404888, 36.39009394, 41.29309474, 
+                                43.34682279, 48.55982854, 50.80565589, 55.29496257, 57.92737879, 
+                                60.64828824, 65.51760517, 68.26709803, 76.32877518, 84.61219467, 
+                                103.3649691, 111.1692293, 119.2928089, 127.7357081, 136.4979268, 
+                                145.579465, 154.9803228, 164.7005, 174.7399968 ]
+radius68_theta10to15 = [ 10.82307758, 11.17850518, 16.2185281, 18.62488713, 22.63408229, 
+                                24.71769042, 30.11217538, 32.69939046, 37.99753196, 40.81619543, 
+                                45.89054775, 49.03066318, 54.00440948, 59.31733555, 63.40789682, 
+                                64.77580021, 73.00113678, 73.25561396, 78.8914776, 86.73962133, 
+                                97.05926327, 96.6932739, 111.6226151, 106.5960265, 109.477541, 
+                                144.2545942, 153.7581461, 163.5921179, 173.7565094, 184.2513208, 
+                                195.076552, 206.2322029, 217.7182737, 229.5347642 ]
+radius68_theta15to20 = [ 12.79450901, 13.02698578, 21.27450933, 25.66008312, 31.78592103, 
+                                35.99689874, 44.37101115, 48.82709363, 55.05972458, 59.68948687, 
+                                65.39866214, 70.59280337, 76.06007787, 82.22695257, 87.50371819, 
+                                90.60099831, 96.34848268, 101.4928478, 106.7157092, 105.0540604, 
+                                110.0653355, 148.3428736, 133.1449443, 146.997265, 173.3954389, 
+                                185.1307166, 196.1408667, 207.4772729, 219.1399351, 231.1288534, 
+                                243.4440277, 256.085458, 269.0531444, 282.3470868 ]
+radius68_theta20to30 = [ 14.16989595, 15.4488322, 28.31044668, 37.54285657, 48.57288885, 
+                                57.04243339, 68.99836079, 75.33388728, 85.00572867, 91.52574074, 
+                                102.5044698, 106.5315986, 116.2341378, 127.1121442, 133.8866375, 
+                                144.5121759, 162.1726963, 160.2986579, 171.386638, 182.5653112, 
+                                205.5853241, 196.3113071, 200.5907513, 228.7275694, 234.0298491, 
+                                253.7990618, 263.6872702, 273.5754785, 283.4636869, 293.3518953, 
+                                303.2401036, 313.128312, 323.0165203, 332.9047287 ]
+radius68_theta30to60 = [ 22.50983127, 26.44537503, 58.24642887, 90.59076279, 130.0592014, 
+                                157.4611392, 184.2187293, 202.6994588, 225.3488816, 243.3454167, 
+                                269.2456428, 280.6119298, 303.8591523, 322.0522722, 335.1780181, 
+                                350.3398234, 353.7763544, 373.9942362, 382.9453608, 401.9703438, 
+                                441.6281859, 432.5241826, 455.2878243, 492.2888656, 502.6653722, 
+                                519.9101788, 539.1604349, 558.410691, 577.6609471, 596.9112032, 
+                                616.1614593, 635.4117154, 654.6619715, 673.9122276 ]
+
+##0.5*v14 RoC
+radius68_thetalt10_05=[]
+radius68_theta10to15_05=[]
+radius68_theta15to20_05=[]
+radius68_theta20to30_05=[]
+radius68_theta30to60_05=[]
+for i in range(0, len(radius68_thetalt10)):
+    radius68_thetalt10_05.append(radius68_thetalt10[i]/2)
+    radius68_theta10to15_05.append(radius68_theta10to15[i]/2)
+    radius68_theta15to20_05.append(radius68_theta15to20[i]/2)
+    radius68_theta20to30_05.append(radius68_theta20to30[i]/2)
+    radius68_theta30to60_05.append(radius68_theta30to60[i]/2)
+
+##0.4*v14 RoC
+radius68_thetalt10_04=[]
+radius68_theta10to15_04=[]
+radius68_theta15to20_04=[]
+radius68_theta20to30_04=[]
+radius68_theta30to60_04=[]
+for i in range(0, len(radius68_thetalt10)):
+    radius68_thetalt10_04.append(radius68_thetalt10[i]*0.4)
+    radius68_theta10to15_04.append(radius68_theta10to15[i]*0.4)
+    radius68_theta15to20_04.append(radius68_theta15to20[i]*0.4)
+    radius68_theta20to30_04.append(radius68_theta20to30[i]*0.4)
+    radius68_theta30to60_04.append(radius68_theta30to60[i]*0.4)
+
+##0.6*v14 RoC
+radius68_thetalt10_06=[]
+radius68_theta10to15_06=[]
+radius68_theta15to20_06=[]
+radius68_theta20to30_06=[]
+radius68_theta30to60_06=[]
+for i in range(0, len(radius68_thetalt10)):
+    radius68_thetalt10_06.append(radius68_thetalt10[i]*0.6)
+    radius68_theta10to15_06.append(radius68_theta10to15[i]*0.6)
+    radius68_theta15to20_06.append(radius68_theta15to20[i]*0.6)
+    radius68_theta20to30_06.append(radius68_theta20to30[i]*0.6)
+    radius68_theta30to60_06.append(radius68_theta30to60[i]*0.6)
+'''
+#8 GeV
+radius68_thetalt10 =[12.0517733, 11.42809496, 11.5101643, 10.71828202, 11.50030134, 
+                    11.0107118, 14.1377409, 14.67601941, 19.19766571, 20.47628066,
+                    25.5278055, 27.33516801, 31.98567417, 33.58383121, 38.01381273,
+                    39.6147705, 44.34638981, 45.99940777, 50.01154325, 52.15551639,
+                    57.04784282, 59.57387393, 64.41771271, 66.46058337, 72.14957366, 
+                    76.94138079, 86.93238372, 97.11444315, 103.73770311, 117.82743262, 
+                    135.32528019, 155.69613409, 146.87999257, 153.18469662]
+
+radius68_theta10to15 = [12.0714534, 12.68319301, 17.98857402, 20.79436049, 25.77938159,
+                        28.25773766, 34.55345737, 37.27795391, 43.55390768, 47.00432816,
+                        53.18687502, 57.13116324, 62.69002904, 66.99705172, 71.03946069,
+                        75.01865187, 79.43936153, 85.73330166, 89.92137916, 91.63739756,
+                        92.13532177, 99.25993642, 99.21866981, 107.98815634, 109.3445183,
+                        118.58299861, 139.95308293, 156.66207747, 171.35629324, 188.92498658,
+                        156.30993422, 155.71517932, 163.92667559, 172.7897301]
+
+radius68_theta15to25 = [14.07076888, 14.82465619, 24.88200395, 31.51967577, 40.65527158,
+                        47.44560016, 58.06111406, 63.19160936, 72.36968893, 77.99408448,
+                        87.23474204, 91.99532588, 99.89084253, 105.69558032, 112.54625396,
+                        116.72870127, 123.57794045, 128.47894141, 135.26094504, 139.60350244,
+                        150.96332865, 145.19956719, 162.30869148, 173.12069157, 167.96401866,
+                        173.08809433, 189.27232507, 198.15373857, 231.9995755, 200.67711876,
+                        215.90250066, 287.25397207, 243.08196658, 267.50410627]
+
+radius68_theta25to30 = [17.83324617, 18.96013429, 37.68935877, 50.27240451, 66.38080089,
+                        78.23420541, 96.69666522, 106.80434485, 116.52538758, 125.34377187,
+                        137.08282137, 143.97385415, 154.30687925, 162.22592515, 168.79156748,
+                        175.3046402, 186.64674434, 193.10401529, 187.48037784, 194.14668953,
+                        214.75465533, 195.03381734, 219.09558376, 232.37028825, 284.3469524,
+                        242.82621876, 286.90881197, 350.7378325, 464.43592201, 255.50191758,
+                        192.70006144, 315.35466861, 337.1538025, 323.55559605]
+
+radius68_theta30to40 = [20.18886758, 22.49165422, 46.13562615, 64.80776168, 96.33459571,
+                        113.68339157, 135.9454338, 146.99762803, 161.6755939, 171.66350233,
+                        189.45752676, 191.86131822, 208.00432541, 213.98961188, 228.70901587,
+                        236.99913933, 249.18225351, 257.02088307, 277.96708389, 274.75412096,
+                        280.26634532, 294.45181517, 290.87023024, 314.9125555, 315.70140348,
+                        329.02359788, 327.25501564, 360.6913775, 343.8903469, 312.41554224,
+                        416.41854548, 304.51400471, 361.18014944, 458.8003203]
+
+
+radius68_theta40to50 = [27.97172772, 29.95019616, 68.54381903, 108.7705473, 152.86188205,
+                        180.46602404, 196.93853125, 217.65062211, 234.80564754, 246.02556372,
+                        264.21529775, 273.6653509, 288.55706506, 304.46654577, 313.65679689,
+                        322.35454022, 340.07492259, 353.51141722, 353.50305946, 355.58892379,
+                        390.53834022, 409.19107317, 415.88728272, 420.19445923, 448.42085252,
+                        508.33733541, 449.9635848, 558.39572737, 507.90958913, 443.84287181,
+                        671.10845249, 619.44333632, 745.45020906, 640.99155736]
+
 
 # For longitudinal segmentation
 segLayers = [0, 6, 17, 34]
@@ -436,34 +656,57 @@ def maxPElectronSPHit(SPHits, sp_z):
     return p_max, Hit_maxP
 
 # Get electron target scoring plane hit
+# Method 1: look at pz
 def electronTargetSPHit(targetSPHits):
     
     E_threshold = 3000    # 3 GeV threshold, may need to modify
     targetSPHit = None
     pmax = 0
     
-    # 1. Interact @ Target
-    pmax, targetSPHit = maxPElectronSPHit(targetSPHits, sp_target_down_z)
-    if pmax > E_threshold:
-        # 2. Interact @ Trigger scin l1
-        pmax, targetSPHit = maxPElectronSPHit(targetSPHits, sp_trigger_pad_down_l1_z)
-        if pmax > E_threshold:
-            # 3. Interact @ Trigger scin l2
-            pmax, targetSPHit = maxPElectronSPHit(targetSPHits, sp_trigger_pad_down_l2_z)
-
+    # # 1. Interact @ Target
+    # pmax, targetSPHit = maxPElectronSPHit(targetSPHits, sp_target_down_z)
+    # if pmax > E_threshold:
+    #     # 2. Interact @ Trigger scin l1
+    #     pmax, targetSPHit = maxPElectronSPHit(targetSPHits, sp_trigger_pad_down_l1_z)
+    #     if pmax > E_threshold:
+    #         # 3. Interact @ Trigger scin l2
+    #         pmax, targetSPHit = maxPElectronSPHit(targetSPHits, sp_trigger_pad_down_l2_z)
 
     # Assume e- interacting @ Target   
-    # for hit in targetSPHits:
+    for hit in targetSPHits:
 
-    #     if abs(hit.getPosition()[2] - sp_target_down_z) > 0.5*sp_thickness or\
-    #             hit.getMomentum()[2] <= 0 or\
-    #             hit.getTrackID() != 1 or\
-    #             hit.getPdgID() != 11:
-    #         continue
+        if abs(hit.getPosition()[2] - sp_target_down_z) > 0.5*sp_thickness or\
+                hit.getMomentum()[2] <= 0 or\
+                hit.getPdgID() != 11:
+                # hit.getTrackID() != 1 or\  # doesn't work for v14 sample
+            continue
 
-    #     if mag(hit.getMomentum()) > pmax:
-    #         targetSPHit = hit
-    #         pmax = mag(targetSPHit.getMomentum())
+        if mag(hit.getMomentum()) > pmax:
+            targetSPHit = hit
+            pmax = mag(targetSPHit.getMomentum())
+
+    return targetSPHit
+
+# Method 2: look at delta pz
+def electronTargetSPHit_deltaPz(targetSPHits):
+    
+    dpz_threshold = 2400    # Delta pz threshold
+    targetSPHit = None
+    pmax = 0
+    
+    # 1. Interact @ Target
+    pmax_target_down_z, targetSPHit_down = maxPElectronSPHit(targetSPHits, sp_target_down_z)
+    pmax_ts_down_l1, targetSPHit_ts_down_l1 = maxPElectronSPHit(targetSPHits, sp_trigger_pad_down_l1_z)
+    pmax_ts_down_l2, targetSPHit_ts_down_l2 = maxPElectronSPHit(targetSPHits, sp_trigger_pad_down_l2_z)
+    targetSPHit = targetSPHit_down
+    if pmax_target_down_z - pmax_ts_down_l1 > dpz_threshold:
+        # 2. Interact @ Trigger scin l1
+        # print('Found dpz = {} > 2.4 GeV @ Trigger scin l1'.format(pmax_target_down_z - pmax_ts_down_l1))
+        targetSPHit = targetSPHit_ts_down_l1
+    elif pmax_ts_down_l1 - pmax_ts_down_l2 > dpz_threshold:
+        # 3. Interact @ Trigger scin l2
+        # print('Found dpz = {} > 2.4 GeV @ Trigger scin l2'.format(pmax_ts_down_l1 - pmax_ts_down_l2))
+        targetSPHit = targetSPHit_ts_down_l2
 
     return targetSPHit
 
@@ -476,8 +719,8 @@ def electronEcalSPHit(ecalSPHits):
 
         if abs(hit.getPosition()[2] - sp_ecal_front_z) > 0.5*sp_thickness or\
                 hit.getMomentum()[2] <= 0 or\
-                hit.getTrackID() != 1 or\
                 hit.getPdgID() != 11:
+                # hit.getTrackID() != 1 or\  # doesn't work for v14 sample
             continue
 
         if mag(hit.getMomentum()) > pmax:
@@ -494,10 +737,21 @@ def electronSPHits(ecalSPHits, targetSPHits):
 
     return ecalSPHit, targetSPHit
 
+#need recoil electrin track
 # Return photon position and momentum at target
 def gammaTargetInfo(eTargetSPHit):
+    
+    gTarget_pvec = np.array([0,0,4000]) - np.array(eTargetSPHit.getMomentum()) 
+    # np.array([0,0,4000]) --> tagging tracker measurement
+    # np.array(eTargetSPHit.getMomentum()) --> recoil electron track momentum [px,py,pz] at target
 
-    gTarget_pvec = np.array([0,0,4000]) - np.array(eTargetSPHit.getMomentum())
+    return eTargetSPHit.getPosition(), gTarget_pvec
+    # eTargetSPHit.getPosition() --> recoil electron track position x,y,z at target
+
+def gammaTargetInfo_true(eTargetSPHit, eTargetUpSPHit):
+    # Use upstream target sp to decide incident e- momentum
+    
+    gTarget_pvec = np.array(eTargetUpSPHit.getMomentum()) - np.array(eTargetSPHit.getMomentum())
 
     return eTargetSPHit.getPosition(), gTarget_pvec
 
