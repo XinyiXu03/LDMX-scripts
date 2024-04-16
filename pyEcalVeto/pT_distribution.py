@@ -23,28 +23,29 @@ last_layer= 0.17669999
 event_p_0001=[]
 event_p_disc_0001=[]
 for event in tree_0001:
-    max_p_0001 = 0 
-    max_p_disc_0001 = 0
-    p_transverse_0001 = 0 
-    p_transverse_disc_0001 = 0  
-    for n, val in enumerate(event.TargetScoringPlaneHits_z):
-        #print(val)
-        if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
-            p_squre_0001 = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
-            p_0001 = np.sqrt(p_squre_0001)
+    if event.summedDet<3000:
+        max_p_0001 = 0 
+        max_p_disc_0001 = 0
+        p_transverse_0001 = 0 
+        p_transverse_disc_0001 = 0  
+        for n, val in enumerate(event.TargetScoringPlaneHits_z):
             #print(val)
-            if p_0001 > max_p_0001:
-                max_p_0001 = p_0001
-                p_transverse_0001 = np.sqrt(max_p_0001**2-event.TargetScoringPlaneHits_pz[n]**2)
-            if event.discValue_EcalVeto > 0.991946:
-                c=c+1
-                p_disc_0001 = p_0001
-                if p_disc_0001 > max_p_disc_0001:
-                    max_p_disc_0001 = p_disc_0001
-                    p_transverse_disc_0001 = np.sqrt(max_p_disc_0001**2-event.TargetScoringPlaneHits_pz[n]**2)    
+            if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
+                p_squre_0001 = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
+                p_0001 = np.sqrt(p_squre_0001)
+                #print(val)
+                if p_0001 > max_p_0001:
+                    max_p_0001 = p_0001
+                    p_transverse_0001 = np.sqrt(max_p_0001**2-event.TargetScoringPlaneHits_pz[n]**2)
+                if event.discValue_EcalVeto > 0.991946:
+                    c=c+1
+                    p_disc_0001 = p_0001
+                    if p_disc_0001 > max_p_disc_0001:
+                        max_p_disc_0001 = p_disc_0001
+                        p_transverse_disc_0001 = np.sqrt(max_p_disc_0001**2-event.TargetScoringPlaneHits_pz[n]**2)    
 
-    event_p_0001.append(p_transverse_0001)
-    event_p_disc_0001.append(p_transverse_disc_0001)
+        event_p_0001.append(p_transverse_0001)
+        event_p_disc_0001.append(p_transverse_disc_0001)
 
 print(len(event_p_0001))
 #print(len(event_p_disc_0001))
@@ -54,28 +55,29 @@ print("c",c)
 event_p_001=[]
 event_p_disc_001=[]
 for event in tree_001:
-    max_p_001 = 0 
-    max_p_disc_001 = 0
-    p_transverse_001 = 0 
-    p_transverse_disc_001 = 0  
-    for n, val in enumerate(event.TargetScoringPlaneHits_z):
-        #print(val)
-        if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
-            p_squre_001 = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
-            p_001 = np.sqrt(p_squre_001)
+    if event.summedDet<3000:
+        max_p_001 = 0 
+        max_p_disc_001 = 0
+        p_transverse_001 = 0 
+        p_transverse_disc_001 = 0  
+        for n, val in enumerate(event.TargetScoringPlaneHits_z):
             #print(val)
-            if p_001 > max_p_001:
-                max_p_001 = p_001
-                p_transverse_001 = np.sqrt(max_p_001**2-event.TargetScoringPlaneHits_pz[n]**2)
-            if event.discValue_EcalVeto > 0.991946:
-                c=c+1
-                p_disc_001 = p_001
-                if p_disc_001 > max_p_disc_001:
-                    max_p_disc_001 = p_disc_001
-                    p_transverse_disc_001 = np.sqrt(max_p_disc_001**2-event.TargetScoringPlaneHits_pz[n]**2)    
+            if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
+                p_squre_001 = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
+                p_001 = np.sqrt(p_squre_001)
+                #print(val)
+                if p_001 > max_p_001:
+                    max_p_001 = p_001
+                    p_transverse_001 = np.sqrt(max_p_001**2-event.TargetScoringPlaneHits_pz[n]**2)
+                if event.discValue_EcalVeto > 0.991946:
+                    c=c+1
+                    p_disc_001 = p_001
+                    if p_disc_001 > max_p_disc_001:
+                        max_p_disc_001 = p_disc_001
+                        p_transverse_disc_001 = np.sqrt(max_p_disc_001**2-event.TargetScoringPlaneHits_pz[n]**2)    
 
-    event_p_001.append(p_transverse_001)
-    event_p_disc_001.append(p_transverse_disc_001)
+        event_p_001.append(p_transverse_001)
+        event_p_disc_001.append(p_transverse_disc_001)
 
 print(len(event_p_001))
 #print(len(event_p_disc_001))
@@ -86,28 +88,29 @@ print("c",c)
 event_p_01=[]
 event_p_disc_01=[]
 for event in tree_01:
-    max_p_01 = 0 
-    max_p_disc_01 = 0
-    p_transverse_01 = 0 
-    p_transverse_disc_01 = 0  
-    for n, val in enumerate(event.TargetScoringPlaneHits_z):
-        #print(val)
-        if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
-            p_squre_01 = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
-            p_01 = np.sqrt(p_squre_01)
+    if event.summedDet<3000:
+        max_p_01 = 0 
+        max_p_disc_01 = 0
+        p_transverse_01 = 0 
+        p_transverse_disc_01 = 0  
+        for n, val in enumerate(event.TargetScoringPlaneHits_z):
             #print(val)
-            if p_01 > max_p_01:
-                max_p_01 = p_01
-                p_transverse_01 = np.sqrt(max_p_01**2-event.TargetScoringPlaneHits_pz[n]**2)
-            if event.discValue_EcalVeto > 0.991946:
-                c=c+1
-                p_disc_01 = p_01
-                if p_disc_01 > max_p_disc_01:
-                    max_p_disc_01 = p_disc_01
-                    p_transverse_disc_01 = np.sqrt(max_p_disc_01**2-event.TargetScoringPlaneHits_pz[n]**2)    
+            if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
+                p_squre_01 = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
+                p_01 = np.sqrt(p_squre_01)
+                #print(val)
+                if p_01 > max_p_01:
+                    max_p_01 = p_01
+                    p_transverse_01 = np.sqrt(max_p_01**2-event.TargetScoringPlaneHits_pz[n]**2)
+                if event.discValue_EcalVeto > 0.991946:
+                    c=c+1
+                    p_disc_01 = p_01
+                    if p_disc_01 > max_p_disc_01:
+                        max_p_disc_01 = p_disc_01
+                        p_transverse_disc_01 = np.sqrt(max_p_disc_01**2-event.TargetScoringPlaneHits_pz[n]**2)    
 
-    event_p_01.append(p_transverse_01)
-    event_p_disc_01.append(p_transverse_disc_01)
+        event_p_01.append(p_transverse_01)
+        event_p_disc_01.append(p_transverse_disc_01)
 
 
 
@@ -115,55 +118,57 @@ for event in tree_01:
 event_p_1=[]
 event_p_disc_1=[]
 for event in tree_1:
-    max_p_1 = 0 
-    max_p_disc_1 = 0
-    p_transverse_1 = 0 
-    p_transverse_disc_1 = 0  
-    for n, val in enumerate(event.TargetScoringPlaneHits_z):
-        #print(val)
-        if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
-            p_squre_1 = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
-            p_1 = np.sqrt(p_squre_1)
+    if event.summedDet<3000:
+        max_p_1 = 0 
+        max_p_disc_1 = 0
+        p_transverse_1 = 0 
+        p_transverse_disc_1 = 0  
+        for n, val in enumerate(event.TargetScoringPlaneHits_z):
             #print(val)
-            if p_1 > max_p_1:
-                max_p_1 = p_1
-                p_transverse_1 = np.sqrt(max_p_1**2-event.TargetScoringPlaneHits_pz[n]**2)
-            if event.discValue_EcalVeto > 0.991946:
-                c=c+1
-                p_disc_1 = p_1
-                if p_disc_1 > max_p_disc_1:
-                    max_p_disc_1 = p_disc_1
-                    p_transverse_disc_1 = np.sqrt(max_p_disc_1**2-event.TargetScoringPlaneHits_pz[n]**2)    
+            if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
+                p_squre_1 = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
+                p_1 = np.sqrt(p_squre_1)
+                #print(val)
+                if p_1 > max_p_1:
+                    max_p_1 = p_1
+                    p_transverse_1 = np.sqrt(max_p_1**2-event.TargetScoringPlaneHits_pz[n]**2)
+                if event.discValue_EcalVeto > 0.991946:
+                    c=c+1
+                    p_disc_1 = p_1
+                    if p_disc_1 > max_p_disc_1:
+                        max_p_disc_1 = p_disc_1
+                        p_transverse_disc_1 = np.sqrt(max_p_disc_1**2-event.TargetScoringPlaneHits_pz[n]**2)    
 
-    event_p_1.append(p_transverse_1)
-    event_p_disc_1.append(p_transverse_disc_1)
+        event_p_1.append(p_transverse_1)
+        event_p_disc_1.append(p_transverse_disc_1)
 
 #pn
 event_p_pn=[]
 event_p_disc_pn=[]
 for event in tree_pn:
-    max_p_pn = 0 
-    max_p_disc_pn = 0
-    p_transverse_pn = 0 
-    p_transverse_disc_pn = 0  
-    for n, val in enumerate(event.TargetScoringPlaneHits_z):
-        #print(val)
-        if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
-            p_squre_pn = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
-            p_pn = np.sqrt(p_squre_pn)
+    if event.summedDet<3000:
+        max_p_pn = 0 
+        max_p_disc_pn = 0
+        p_transverse_pn = 0 
+        p_transverse_disc_pn = 0  
+        for n, val in enumerate(event.TargetScoringPlaneHits_z):
             #print(val)
-            if p_pn > max_p_pn:
-                max_p_pn = p_pn
-                p_transverse_pn = np.sqrt(max_p_pn**2-event.TargetScoringPlaneHits_pz[n]**2)
-            if event.discValue_EcalVeto > 0.991946:
-                c=c+1
-                p_disc_pn = p_pn
-                if p_disc_pn > max_p_disc_pn:
-                    max_p_disc_pn = p_disc_pn
-                    p_transverse_disc_pn = np.sqrt(max_p_disc_pn**2-event.TargetScoringPlaneHits_pz[n]**2)    
+            if val >= last_layer and event.TargetScoringPlaneHits_pdgID[n] == 11 and event.TargetScoringPlaneHits_pz[n]>0:
+                p_squre_pn = event.TargetScoringPlaneHits_px[n]**2 + event.TargetScoringPlaneHits_py[n]**2 + event.TargetScoringPlaneHits_pz[n]**2
+                p_pn = np.sqrt(p_squre_pn)
+                #print(val)
+                if p_pn > max_p_pn:
+                    max_p_pn = p_pn
+                    p_transverse_pn = np.sqrt(max_p_pn**2-event.TargetScoringPlaneHits_pz[n]**2)
+                if event.discValue_EcalVeto > 0.991946:
+                    c=c+1
+                    p_disc_pn = p_pn
+                    if p_disc_pn > max_p_disc_pn:
+                        max_p_disc_pn = p_disc_pn
+                        p_transverse_disc_pn = np.sqrt(max_p_disc_pn**2-event.TargetScoringPlaneHits_pz[n]**2)    
 
-    event_p_pn.append(p_transverse_pn)
-    event_p_disc_pn.append(p_transverse_disc_pn)
+        event_p_pn.append(p_transverse_pn)
+        event_p_disc_pn.append(p_transverse_disc_pn)
 
 
 
@@ -288,15 +293,15 @@ hist_p_1.Draw("HIST SAME")
 hist_p_pn.SetLineColor(ROOT.kRed+2)  
 hist_p_pn.Draw("HIST SAME")
 
-hist_p_0001.GetXaxis().SetTitle("Recoil pT")
-hist_p_0001.GetYaxis().SetTitle("# of events")
+hist_p_0001.GetXaxis().SetTitle("Recoil pT (MeV)")
+#hist_p_0001.GetYaxis().SetTitle("# of events")
 hist_p_0001.GetXaxis().SetTitleSize(0.05)  
 hist_p_0001.GetYaxis().SetTitleSize(0.05)  
 hist_p_0001.GetYaxis().SetTitleOffset(0.8) 
 hist_p_0001.GetXaxis().SetLabelSize(0.03)  
 hist_p_0001.GetYaxis().SetLabelSize(0.03) 
 #hist_p_0001.GetXaxis().SetRangeUser(0, 600)
-hist_p_0001.GetYaxis().SetRangeUser(1e-5, 1)
+hist_p_0001.GetYaxis().SetRangeUser(1e-5, 1e0)
 
 
 legend = ROOT.TLegend(0.67,0.6,0.77,0.8)  
@@ -324,5 +329,5 @@ hist_p_0001.SetStats(0)
 canvas.Update()
 
 # Save the histogram to a file
-canvas.SaveAs("PT_distribution_8GeV.png")
+canvas.SaveAs("PT_distribution_8GeV_new.png")
 
