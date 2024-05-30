@@ -196,7 +196,8 @@ def event_process(self):
 
     # Add prediction to new tree
     evtarray = np.array([feats])
-    pred = float(model.predict(xgb.DMatrix(evtarray))[0])
+    #pred = float(model.predict(xgb.DMatrix(evtarray))[0])
+    pred = float(model.predict(xgb.DMatrix(evtarray))[0][1])
     self.tfMaker.branches['discValue_EcalVeto'][0] = pred
     #self.tfMaker.branches['epAng'][0] = self.tree.epAng
     self.tfMaker.branches['HCalVeto_passesVeto'][0] = self.tree.HCalVeto_passesVeto

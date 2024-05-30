@@ -173,7 +173,9 @@ if __name__ == "__main__":
     eventContainer = mergedContainer(sigContainer,bkgContainer)
 
     params = {
-               'objective': 'binary:logistic',
+               #'objective': 'binary:logistic',
+               'objective': 'multi:softprob',
+               'num_class': 2,
                'eta': options.eta,
                'max_depth': options.depth,
                'min_child_weight': 20,
@@ -181,7 +183,8 @@ if __name__ == "__main__":
                'subsample':.9,
                'colsample_bytree': .85,
                # 'eval_metric': 'auc',
-               'eval_metric': 'error',
+               #'eval_metric': 'error',
+               'eval_metric': 'merror',
                'seed': 1,
                'nthread': 30,
                'verbosity': 1
