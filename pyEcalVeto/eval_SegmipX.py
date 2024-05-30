@@ -12,6 +12,10 @@ from mods import physTools, mipTracking
 pkl_file   = os.getcwd()+'/bdt_test_0/bdt_test_0_weights.pkl'
 model = pkl.load(open(pkl_file,'rb'))
 
+#json_file = os.path.join(os.getcwd(), 'bdt_try_file_1', 'training_model.json')
+#model = xgb.Booster()
+#model.load_model(json_file)
+
 branches_info = {
         # Base variables
         'nReadoutHits':              {'rtype': int,   'default': 0 },

@@ -199,6 +199,8 @@ if __name__ == "__main__":
     output = open(options.out_name+'_'+str(bdt_num)+'/' + \
             options.out_name+'_'+str(bdt_num)+'_weights.pkl', 'wb')
     pkl.dump(gbm, output)
+    output_json = os.path.join(options.out_name + '_' + str(bdt_num), 'training_model.json')
+    gbm.save_model(output_json)
 
     # Plot feature importances
     xgb.plot_importance(gbm)
